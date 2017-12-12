@@ -15,7 +15,7 @@ def plotIVCVcurves(fileName, whatPlot):
       print "Dibujar ambas"
 
 
-   #-------------------------------------------------------------------------------------------------------------------------
+   #-------------------------------------------------------------------------------------------
 
    # PARTE 2: Ficheros 
    # Cada fichero pertece a un pad distinto y contiene 4 subficheros pertenecientes a los cuatro sensores de dicho pad
@@ -39,7 +39,7 @@ def plotIVCVcurves(fileName, whatPlot):
    open('fileName').NextLine()  # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos)
 
 
-   #-------------------------------------------------------------------------------------------------------------------------
+   #------------------------------------------------------------------------------------------
 
 
    # PARTE 3: Generar plots 
@@ -51,7 +51,7 @@ def plotIVCVcurves(fileName, whatPlot):
 
 
 
-   #---------------------------------------------------BACKUP----------------------------------------------------------------
+   #--------------------------------BACKUP---------------------------------------------------
 
 
     canvas = ROOT.TCanvas()
@@ -77,21 +77,58 @@ def plotIVCVcurves(fileName, whatPlot):
     canvas.SaveAs("cluster_calibrated_charge_{0}.root".format(Nrun))
 
  """
+
 def get_files(module_path,sensor_number_list):
-    """WHAT THE FUNCTION DOES
+    """ WHAT THE FUNCTION DOES
+        This function receives the directory containing the module folders with data
+        and a list of the sensors which the user wants to plot.
 
     Parameters
     ----------
-    module_path: str
-      Name of the module´s directory (raise para errores
-)
+    module_path: str (string)
+      Name of the module´s directory (raise para errores)
+    sensor_number_list (array)
+      Array con los nombres de los sensores dentro del module_path que queremos plotear
+
     Return
     ------
     ivfiles,cvfiles   
     """
-    i=[]
-    j=[]
-    return i,j
+    # funcion para ver contenido de un fichero. Importarlo:
+    from os import listdir, path
+    # importar funcion array:
+    import array
+
+    # pasar como input el directorio (tal cual entre comillas o un string). 
+    # Devuelve array con los elementos que encuentra en el directorio
+    directories = listdir(module_path)
+
+    # si el directorio introducido esta vacio se lanza mensaje de error y se para el programa:
+    if (directories == []):
+        print("\033[1;35mERROR: The given directory is empty\033[1;m")
+        sys.exit(1)
+
+    k = 0
+    # array que guarda los ficheros con los datos IV y CV a plotear:
+    plot_folder = []
+    # recorrer el array directories para quedarnos con las carpetas de los sensores dentro del 
+    # modulo que se han pedido plotear (las carpetas contienen el fichero IV y CV). Para ello
+    # se compara la terminacion con la lista de sensores que se paso como input:
+    for fichero in directories:
+        # split the name of the folders when finding a "_": (da 2 strings) Ex: "W5-B220_S2" (medidas pre-Andrea) 
+        if (sensor_number_list[k] == fichero.split('_')[1]):
+            plot_folder.append(fichero)
+        # or when finding a second "-": (da 3 strings)  Ex: "W5-B230-S2" (medidas Andrea)
+        elif (sensor_number_list[k] == fichero.split('-')[2]):
+            plot_folder.append(fichero)
+        else:
+            print("\033[1;35mERROR: The requested sensor/s are not in the given directory\033[1;m")
+            sys.exit(1)
+        k = k+1
+
+    valoresA= []
+    valoresB = []
+    return valoresA,valoresB
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
@@ -115,5 +152,4 @@ if __name__ == '__main__':
     # for each cvfiles, then parse the file and return the array of measures (C,V)
     #.... 
     
-
 
