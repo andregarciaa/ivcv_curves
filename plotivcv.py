@@ -39,6 +39,18 @@ def plotIVCVcurves(fileName, whatPlot):
    open('fileName').NextLine()  # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos)
 
 
+   # primeros pasos lectura de los ficheros:
+            readfileCV = open(ficherosIVCV[0],'rb') 
+            readfileIV = open(ficherosIVCV[1],'rb')
+
+            cont = 0
+            while (readfileCV.readLine() != "BEGIN"):
+                readfileCV.readLine()
+                cont = cont+1
+            # mostrar los valores en el documento (a partir de la linea "BEGIN":
+            readfileCV.readLine(cont) 
+
+
    #------------------------------------------------------------------------------------------
 
 
@@ -106,29 +118,47 @@ def get_files(module_path,sensor_number_list):
     # si el directorio introducido esta vacio se lanza mensaje de error y se para el programa:
     if (directories == []):
         print("\033[1;35mERROR: The given directory is empty\033[1;m")
-        sys.exit(1)
+        # salir del programa: (otra opcion es: sys.exit(1))
+        raise
 
     k = 0
     # array que guarda los ficheros con los datos IV y CV a plotear:
     plot_folder = []
+    ficherosIVCV = []
+    valuescv = []
+    valuesiv = []
+
     # recorrer el array directories para quedarnos con las carpetas de los sensores dentro del 
     # modulo que se han pedido plotear (las carpetas contienen el fichero IV y CV). Para ello
     # se compara la terminacion con la lista de sensores que se paso como input:
     for fichero in directories:
+
         # split the name of the folders when finding a "_": (da 2 strings) Ex: "W5-B220_S2" (medidas pre-Andrea) 
         if (sensor_number_list[k] == fichero.split('_')[1]):
+            # si la carpeta es una de la lista de sensores a plotear, se agrega a una nueva lista:
             plot_folder.append(fichero)
+            # concatenar el directorio con el nombre del sensor, para entrar en la carpeta con la IV y CV:
+            ficherosIVCV.append(listdir(os.path.join(module_path, sensor_number_list[k])))
+            # guardar por separado IV y CV:
+            valuescv.append(ficherosIVCV[k])
+            valuesiv.append(ficherosIVCV[k+1])
+
         # or when finding a second "-": (da 3 strings)  Ex: "W5-B230-S2" (medidas Andrea)
         elif (sensor_number_list[k] == fichero.split('-')[2]):
             plot_folder.append(fichero)
+            # concatenar el directorio con el nombre del sensor, para entrar en la carpeta con la IV y CV:
+            ficherosIVCV.append(listdir(os.path.join(module_path, sensor_number_list[k])))
+            # guardar por separado IV y CV:
+            valuescv.append(ficherosIVCV[k])
+            valuesiv.append(ficherosIVCV[k+1])
+
         else:
             print("\033[1;35mERROR: The requested sensor/s are not in the given directory\033[1;m")
-            sys.exit(1)
+            # salir del programa: (otra opcion es: sys.exit(1))
+            raise
         k = k+1
 
-    valoresA= []
-    valoresB = []
-    return valoresA,valoresB
+    return valuescv, valuesiv
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
