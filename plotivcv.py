@@ -98,9 +98,9 @@ def get_files(module_path,sensor_number_list):
     Parameters
     ----------
     module_path: str (string)
-      Name of the module's directory (raise para errores)
+      Name of the module's directory
     sensor_number_list (array)
-      Array con los nombres de los sensores dentro del module_path que queremos plotear
+      Array with the names of the sensors inside the module_path which the user wants to plot
 
     Return
     ------
@@ -125,8 +125,8 @@ def get_files(module_path,sensor_number_list):
     # array que guarda los ficheros con los datos IV y CV a plotear:
     plot_folder = []
     ficherosIVCV = []
-    valuescv = []
-    valuesiv = []
+    cvfiles = []
+    ivfiles = []
 
     # recorrer el array directories para quedarnos con las carpetas de los sensores dentro del 
     # modulo que se han pedido plotear (las carpetas contienen el fichero IV y CV). Para ello
@@ -139,18 +139,18 @@ def get_files(module_path,sensor_number_list):
             plot_folder.append(fichero)
             # concatenar el directorio con el nombre del sensor, para entrar en la carpeta con la IV y CV:
             ficherosIVCV.append(listdir(os.path.join(module_path, sensor_number_list[k])))
-            # guardar por separado IV y CV:
-            valuescv.append(ficherosIVCV[k])
-            valuesiv.append(ficherosIVCV[k+1])
+            # guardar por separado los nombres de los ficheros IV y CV:
+            cvfiles.append(ficherosIVCV[k])
+            ivfiles.append(ficherosIVCV[k+1])
 
         # or when finding a second "-": (da 3 strings)  Ex: "W5-B230-S2" (medidas Andrea)
         elif (sensor_number_list[k] == fichero.split('-')[2]):
             plot_folder.append(fichero)
             # concatenar el directorio con el nombre del sensor, para entrar en la carpeta con la IV y CV:
             ficherosIVCV.append(listdir(os.path.join(module_path, sensor_number_list[k])))
-            # guardar por separado IV y CV:
-            valuescv.append(ficherosIVCV[k])
-            valuesiv.append(ficherosIVCV[k+1])
+            # guardar por separado los nombres de los ficheros IV y CV:
+            cvfiles.append(ficherosIVCV[k])
+            ivfiles.append(ficherosIVCV[k+1])
 
         else:
             print("\033[1;35mERROR: The requested sensor/s are not in the given directory\033[1;m")
@@ -158,7 +158,7 @@ def get_files(module_path,sensor_number_list):
             raise
         k = k+1
 
-    return valuescv, valuesiv
+    return cvfiles, ivfiles
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
