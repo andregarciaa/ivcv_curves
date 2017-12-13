@@ -98,7 +98,7 @@ def get_files(module_path,sensor_number_list):
     Parameters
     ----------
     module_path: str (string)
-      Name of the module´s directory (raise para errores)
+      Name of the module's directory (raise para errores)
     sensor_number_list (array)
       Array con los nombres de los sensores dentro del module_path que queremos plotear
 
