@@ -126,7 +126,7 @@ def get_files(module_path,sensor_number_list):
     ficherosIVCV = []
     cvfiles = []
     ivfiles = []
-
+    
     # recorrer el array directories para quedarnos con las carpetas de los sensores dentro del 
     # modulo que se han pedido plotear (las carpetas contienen el fichero IV y CV). Para ello
     # se compara la terminacion con la lista de sensores que se paso como input:
@@ -139,6 +139,12 @@ def get_files(module_path,sensor_number_list):
                 plot_folder.append(fichero)
                 # concatenar el directorio con el nombre del sensor, para entrar en la carpeta con la IV y CV:
                 ficherosIVCV.append(listdir(os.path.join(module_path, sensor_number_list[k])))
+
+                # si se repitio varias veces la medida IV o CV para un sensor, (porque la primera medida se hizo mal o para comprobar que algo raro se repite siempre), se para el codigo:
+                if (len(ficherosIVCV)>2):
+                    print("\033[1;35mERROR: There are several IV or CV measurements done for the same sensor. Please leave just one of each type inside all the sensor folders.\033[1;m")
+                    raise
+
                 # guardar por separado los nombres de los ficheros IV y CV:
                 cvfiles.append(ficherosIVCV[k])
                 ivfiles.append(ficherosIVCV[k+1])
@@ -174,8 +180,8 @@ if __name__ == '__main__':
     args = parser.parse_args()  
     print args.module_dir
     print args.sensor_number
-    # Obtain the list IV,CV files, 
-    ivfiles,cvfiles = get_files(args.module_dir,args.sensor_number)
+    # Obtain the list IV,CV files. First output of get_files is the cv data, and second the iv
+    cvfiles,ivfiles = get_files(args.module_dir,args.sensor_number)
     # Read and parse the files
     # for each ivfiles, then parse the file and return the array of measures (I,V)
     # for each cvfiles, then parse the file and return the array of measures (C,V)
