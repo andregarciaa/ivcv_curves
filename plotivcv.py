@@ -1,4 +1,4 @@
-# para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
+ # para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
 #! /usr/bin/python
 
 """
@@ -136,7 +136,8 @@ def get_files(module_path,sensor_number_list):
         # cada fichero en el path introducido se compara con cada uno de los sensores de la lista a plotear:
         for k in range(0,len(sensor_number_list)):
             # split the name of the folders when finding a "_": (da 2 strings) Ex: "W5-B220_S2" (medidas pre-Andrea) 
-            if (sensor_number_list[k] == fichero.split('_')[1]):
+            # or when finding a second "-": (da 3 strings)  Ex: "W5-B230-S2" (medidas Andrea)
+            if (sensor_number_list[k] == fichero.split('_')[1] or sensor_number_list[k] == fichero.split('-')[2]):
                 checker = 1
                 # si la carpeta es una de la lista de sensores a plotear, se agrega a una nueva lista:
                 plot_folder.append(fichero)
@@ -155,24 +156,7 @@ def get_files(module_path,sensor_number_list):
                 cvfiles.append(ficherosIVCV[0])
                 ivfiles.append(ficherosIVCV[1])
 
-            # or when finding a second "-": (da 3 strings)  Ex: "W5-B230-S2" (medidas Andrea)
-            elif (sensor_number_list[k] == fichero.split('-')[2]):
-                checker = 2
-                plot_folder.append(fichero)
-                # concatenar el directorio con el nombre del sensor, para entrar en la carpeta con la IV y CV:
-                allficherosIVCV.append(listdir(os.path.join(module_path, fichero)))
-                ficherosIVCV = listdir(os.path.join(module_path, fichero))
-
-                # si se repitio varias veces la medida IV o CV para un sensor, (porque la primera medida se hizo mal o para comprobar que algo raro se repite siempre), se para el codigo:
-                if (len(ficherosIVCV)>2):
-                    print("\033[1;35mERROR: There are several IV or CV measurements done for the same sensor. Please leave just one of each type inside all the sensor folders.\033[1;m")
-                    raise
-
-                # guardar por separado los nombres de los ficheros IV y CV:
-                cvfiles.append(ficherosIVCV[0])
-                ivfiles.append(ficherosIVCV[1])
-
-    if(checker=0):
+    if(checker == 0):
         print("\033[1;35mERROR: The requested sensor/s are not in the given directory\033[1;m")
         # salir del programa: (otra opcion es: sys.exit(1))
         raise
