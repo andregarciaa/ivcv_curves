@@ -117,9 +117,8 @@ def get_files(module_path,sensor_number_list):
 
     # si el directorio introducido esta vacio se lanza mensaje de error y se para el programa:
     if (directories == []):
-        print("\033[1;35mERROR: The given directory is empty\033[1;m")
-        # salir del programa: (otra opcion es: sys.exit(1))
-        raise
+        # salir del programa: (otra opcion es: sys.exit(1
+        raise IOError("\033[1;35mThe given directory is empty\033[1;m") 
 
     # array que guarda los ficheros con los datos IV y CV a plotear:
     plot_folder = []
