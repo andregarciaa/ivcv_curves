@@ -1,19 +1,6 @@
  # para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
 #! /usr/bin/python
 
-"""
-def plotIVCVcurves(fileName, whatPlot):
-   print "hola"
-   # PARTE 1: Argumentos de entrada
-   if (whatPlot==0):   # Dibujar solo IVs
-      print "Dibujar IV "
-   
-   elif(whatPlot==1):  # Dibujar solo CVs
-      print "Dibujar CV"
-
-   elif(whatPlot==2):  # Dibujar IVs y CVs
-      print "Dibujar ambas"
-
 
    #-------------------------------------------------------------------------------------------
 
@@ -22,49 +9,66 @@ def plotIVCVcurves(fileName, whatPlot):
    # Cada subfichero contiene dos archivos: uno con extension .iv y el otro con extension .cv
    # Encontrar y asociar los ficheros a representar.
 
-   # Leer el nombre de fichero separandolo en dos mediante el punto. Segunda parte = tipo de plot:
-   plotType = fileName.split('.')[1]
+    # recorrer el array con los nombres de los ficheros a plotear y para cada uno de ellos, hacer el plot:
+    for fileName in ivfiles:
+        # Leer el (path+nombre de fichero) separandolo en dos mediante el punto. Segunda parte = tipo de plot:
+        plotType = fileName.split('.')[1]
+        if (plotType==iv):
+            ejeY = "i"
+            titlePlot = "IV curve"
+        else:
+            ejeY = "v"
+            titlePlot = "CV curve"
 
-   if (plotType==iv):
-      ejeY = "i"
-      titlePlot = "IV curve"
-   else:
-      ejeY = "v"
-      titlePlot = "CV curve"
+        # leer el fichero de datos: saltar el cabecero, despues de BEGIN empiezan los datos:
+        while(open('fileName').readLine()!="BEGIN"):
+            open('fileName').NextLine()
 
-   # leer el fichero de datos
-   while(open('fileName').readLine()!="BEGIN"):
-      open('fileName').NextLine()
+        open('fileName').NextLine()  # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos)
 
-   open('fileName').NextLine()  # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos)
+        # ir guardando el contenido de todas las lineas en el array ivdata:
+        while((open('fileName').readLine()!= "")
+            ivdata = open('fileName').readLine()
 
+              """
+        # primeros pasos lectura de los ficheros:
+        readfileCV = open(ficherosIVCV[0],'rb') 
+        readfileIV = open(ficherosIVCV[1],'rb')
 
-   # primeros pasos lectura de los ficheros:
-            readfileCV = open(ficherosIVCV[0],'rb') 
-            readfileIV = open(ficherosIVCV[1],'rb')
-
-            cont = 0
-            while (readfileCV.readLine() != "BEGIN"):
-                readfileCV.readLine()
-                cont = cont+1
-            # mostrar los valores en el documento (a partir de la linea "BEGIN":
-            readfileCV.readLine(cont) 
-
+        cont = 0
+        while (readfileCV.readLine() != "BEGIN"):
+            readfileCV.readLine()
+            cont = cont+1
+        # mostrar los valores en el documento (a partir de la linea "BEGIN":
+        readfileCV.readLine(cont) 
+             """
+"""
 
    #------------------------------------------------------------------------------------------
-
 
    # PARTE 3: Generar plots 
       # importar liberia para hacer plots:
       import pylab as pl  
       # use pylab to plot x and y
-      pl.plot(x, y)
-	       	
-
-
+      pl.plot(x, y)	       	
 
    #--------------------------------BACKUP---------------------------------------------------
 
+    # Se podria implementar que el usuario eliga si quiere ver la IV, la CV o ambas (en la segunda parte):
+
+    def plotIVCVcurves(fileName, whatPlot):
+       print "hola"
+       # PARTE 1: Argumentos de entrada
+       if (whatPlot==0):   # Dibujar solo IVs
+          print "Dibujar IV "
+   
+       elif(whatPlot==1):  # Dibujar solo CVs
+          print "Dibujar CV"
+
+       elif(whatPlot==2):  # Dibujar IVs y CVs
+          print "Dibujar ambas"
+
+    # ----------------------------
 
     canvas = ROOT.TCanvas()
     # Pintar el ajuste calculado:
@@ -103,6 +107,7 @@ def get_files(module_path,sensor_number_list):
       Array with the names of the sensors inside the module_path which the user wants to plot
 
     Return
+    Two arrays with the paths and names of the files which contain the data which is goint to be plotted
     ------
     ivfiles,cvfiles   
     """
@@ -182,6 +187,7 @@ if __name__ == '__main__':
     cvfiles,ivfiles = get_files(args.module_dir,args.sensor_number)
     # Read and parse the files
     # for each ivfiles, then parse the file and return the array of measures (I,V)
+    ivdata = get_data(ivfiles)
     # for each cvfiles, then parse the file and return the array of measures (C,V)
     #.... 
     
