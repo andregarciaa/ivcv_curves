@@ -1,7 +1,7 @@
  # para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
 #! /usr/bin/python
 
-
+def get_data(cvfiles,ivfiles)
    #-------------------------------------------------------------------------------------------
 
    # PARTE 2: Ficheros 
