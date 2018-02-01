@@ -24,9 +24,10 @@
         while(open('fileName').readLine()!="BEGIN"):
             open('fileName').NextLine()
 
-        open('fileName').NextLine()  # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos)
+        # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos):
+        open('fileName').NextLine()  
 
-        # ir guardando el contenido de todas las lineas en el array ivdata:
+        # ir guardando el contenido de todas las lineas no vacias en el array ivdata:
         while((open('fileName').readLine()!= "")
             ivdata = open('fileName').readLine()
 
@@ -122,7 +123,7 @@ def get_files(module_path,sensor_number_list):
 
     # si el directorio introducido esta vacio se lanza mensaje de error y se para el programa:
     if (directories == []):
-        # salir del programa: (otra opcion es: sys.exit(1
+        # salir del programa: (otra opcion es: sys.exit(1))
         raise IOError("\033[1;35mThe given directory is empty\033[1;m") 
 
     # array que guarda los ficheros con los datos IV y CV a plotear:
