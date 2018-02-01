@@ -1,99 +1,5 @@
- # para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
+# para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
 #! /usr/bin/python
-
-def get_data(cvfiles,ivfiles)
-   #-------------------------------------------------------------------------------------------
-
-   # PARTE 2: Ficheros 
-   # Cada fichero pertece a un pad distinto y contiene 4 subficheros pertenecientes a los cuatro sensores de dicho pad
-   # Cada subfichero contiene dos archivos: uno con extension .iv y el otro con extension .cv
-   # Encontrar y asociar los ficheros a representar.
-
-    # recorrer el array con los nombres de los ficheros a plotear y para cada uno de ellos, hacer el plot:
-    for fileName in ivfiles:
-        # Leer el (path+nombre de fichero) separandolo en dos mediante el punto. Segunda parte = tipo de plot:
-        plotType = fileName.split('.')[1]
-        if (plotType==iv):
-            ejeY = "i"
-            titlePlot = "IV curve"
-        else:
-            ejeY = "v"
-            titlePlot = "CV curve"
-
-        # leer el fichero de datos: saltar el cabecero, despues de BEGIN empiezan los datos:
-        while(open('fileName').readLine()!="BEGIN"):
-            open('fileName').NextLine()
-
-        # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos):
-        open('fileName').NextLine()  
-
-        # ir guardando el contenido de todas las lineas no vacias en el array ivdata:
-        while((open('fileName').readLine()!= "")
-            ivdata = open('fileName').readLine()
-
-              """
-        # primeros pasos lectura de los ficheros:
-        readfileCV = open(ficherosIVCV[0],'rb') 
-        readfileIV = open(ficherosIVCV[1],'rb')
-
-        cont = 0
-        while (readfileCV.readLine() != "BEGIN"):
-            readfileCV.readLine()
-            cont = cont+1
-        # mostrar los valores en el documento (a partir de la linea "BEGIN":
-        readfileCV.readLine(cont) 
-             """
-"""
-
-   #------------------------------------------------------------------------------------------
-
-   # PARTE 3: Generar plots 
-      # importar liberia para hacer plots:
-      import pylab as pl  
-      # use pylab to plot x and y
-      pl.plot(x, y)	       	
-
-   #--------------------------------BACKUP---------------------------------------------------
-
-    # Se podria implementar que el usuario eliga si quiere ver la IV, la CV o ambas (en la segunda parte):
-
-    def plotIVCVcurves(fileName, whatPlot):
-       print "hola"
-       # PARTE 1: Argumentos de entrada
-       if (whatPlot==0):   # Dibujar solo IVs
-          print "Dibujar IV "
-   
-       elif(whatPlot==1):  # Dibujar solo CVs
-          print "Dibujar CV"
-
-       elif(whatPlot==2):  # Dibujar IVs y CVs
-          print "Dibujar ambas"
-
-    # ----------------------------
-
-    canvas = ROOT.TCanvas()
-    # Pintar el ajuste calculado:
-    ajuste.Draw()	 	        
-    fitStatus = histo.Fit(ajuste, "SQ","", 1000,80000)
-    mpv_down = ajuste.GetParameter(1)
-    if not fitStatus.IsValid():
-        print("\033[1;31mfailed fit: fit down\033[1;m")
-    fitStatus = histo.Fit(ajuste, "SQ","", 10000,30000)
-    mpv_up = ajuste.GetParameter(1)
-    if not fitStatus.IsValid():
-        print("\033[1;31mfailed fit: fit up\033[1;m")
-    fitStatus = histo.Fit(ajuste, "SQ", "", 10000, 50000) # Ajustar el plot con el fit calculado y ajustar los limites del ajuste a posteriori
-    mpv_nominal = ajuste.GetParameter(1)
-    if not fitStatus.IsValid():
-        print("\033[1;31mfailed fit: fit nominal\033[1;m")
-    nom = "MPV: {0:.0f}#pm{1:.0f}".format(mpv_nominal, max(abs(mpv_nominal-mpv_down) , abs(mpv_up-mpv_nominal)))
-    stringPlot = ROOT.TLatex()
-    stringPlot.DrawLatexNDC(0.6,0.5,nom)
-
-    #canvas.SaveAs("cluster_calibrated_charge_"+Nrun+".png")
-    canvas.SaveAs("cluster_calibrated_charge_{0}.root".format(Nrun))
-
- """
 
 def get_files(module_path,sensor_number_list):
     """ WHAT THE FUNCTION DOES
@@ -168,6 +74,103 @@ def get_files(module_path,sensor_number_list):
             
     return cvfiles, ivfiles
 
+#------------------------------------------------------------------------------------------------------------------
+
+# PARTE 2: Ficheros 
+# Cada fichero pertece a un pad distinto y contiene 4 subficheros pertenecientes a los cuatro sensores de dicho pad
+# Cada subfichero contiene dos archivos: uno con extension .iv y el otro con extension .cv
+# Encontrar y asociar los ficheros a representar.
+
+def get_data(cvfiles,ivfiles)
+
+    # recorrer el array con los nombres de los ficheros a plotear y para cada uno de ellos, hacer el plot:
+    for fileName in ivfiles:
+        # Leer el (path+nombre de fichero) separandolo en dos mediante el punto. Segunda parte = tipo de plot:
+        plotType = fileName.split('.')[1]
+        if (plotType==iv):
+            ejeY = "i"
+            titlePlot = "IV curve"
+        else:
+            ejeY = "v"
+            titlePlot = "CV curve"
+
+        # leer el fichero de datos: saltar el cabecero, despues de BEGIN empiezan los datos:
+        while(open('fileName').readLine()!="BEGIN"):
+            open('fileName').NextLine()
+
+        # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos):
+        open('fileName').NextLine()  
+
+        # ir guardando el contenido de todas las lineas no vacias en el array ivdata:
+        while((open('fileName').readLine()!= "")
+            ivdata = open('fileName').readLine()
+
+              """
+        # primeros pasos lectura de los ficheros:
+        readfileCV = open(ficherosIVCV[0],'rb') 
+        readfileIV = open(ficherosIVCV[1],'rb')
+
+        cont = 0
+        while (readfileCV.readLine() != "BEGIN"):
+            readfileCV.readLine()
+            cont = cont+1
+        # mostrar los valores en el documento (a partir de la linea "BEGIN":
+        readfileCV.readLine(cont) 
+             """
+
+
+
+#------------------------------------------------------------------------------------------------------------------
+"""
+   # PARTE 3: Generar plots 
+      # importar liberia para hacer plots:
+      import pylab as pl  
+      # use pylab to plot x and y
+      pl.plot(x, y)	       	
+
+#--------------------------------------------------BACKUP----------------------------------------------------------
+
+    # Se podria implementar que el usuario eliga si quiere ver la IV, la CV o ambas (en la segunda parte):
+
+    def plotIVCVcurves(fileName, whatPlot):
+       print "hola"
+       # PARTE 1: Argumentos de entrada
+       if (whatPlot==0):   # Dibujar solo IVs
+          print "Dibujar IV "
+   
+       elif(whatPlot==1):  # Dibujar solo CVs
+          print "Dibujar CV"
+
+       elif(whatPlot==2):  # Dibujar IVs y CVs
+          print "Dibujar ambas"
+
+    # ----------------------------
+
+    canvas = ROOT.TCanvas()
+    # Pintar el ajuste calculado:
+    ajuste.Draw()	 	        
+    fitStatus = histo.Fit(ajuste, "SQ","", 1000,80000)
+    mpv_down = ajuste.GetParameter(1)
+    if not fitStatus.IsValid():
+        print("\033[1;31mfailed fit: fit down\033[1;m")
+    fitStatus = histo.Fit(ajuste, "SQ","", 10000,30000)
+    mpv_up = ajuste.GetParameter(1)
+    if not fitStatus.IsValid():
+        print("\033[1;31mfailed fit: fit up\033[1;m")
+    fitStatus = histo.Fit(ajuste, "SQ", "", 10000, 50000) # Ajustar el plot con el fit calculado y ajustar los limites del ajuste a posteriori
+    mpv_nominal = ajuste.GetParameter(1)
+    if not fitStatus.IsValid():
+        print("\033[1;31mfailed fit: fit nominal\033[1;m")
+    nom = "MPV: {0:.0f}#pm{1:.0f}".format(mpv_nominal, max(abs(mpv_nominal-mpv_down) , abs(mpv_up-mpv_nominal)))
+    stringPlot = ROOT.TLatex()
+    stringPlot.DrawLatexNDC(0.6,0.5,nom)
+
+    #canvas.SaveAs("cluster_calibrated_charge_"+Nrun+".png")
+    canvas.SaveAs("cluster_calibrated_charge_{0}.root".format(Nrun))
+
+ """
+
+
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
@@ -190,5 +193,3 @@ if __name__ == '__main__':
     ivdata = get_data(ivfiles)
     # for each cvfiles, then parse the file and return the array of measures (C,V)
     #.... 
-    
-
