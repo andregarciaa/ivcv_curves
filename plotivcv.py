@@ -1,74 +1,6 @@
 # para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
 #! /usr/bin/python
 
-
-#------------------------------------------------------------------------------------------------------------------
-
-# This part of the code corrects the capacitance values for irradiated sensors which present an awkward C vs V curve:
-
-import os
-import os.path
-import argparse
-import math
-import errno
-
-# Definition of the parser for reading the arguments after the name of the code:
-parser = argparse.ArgumentParser()
-# Write -i + Name of the directory whose directories and folders are going to be inspected looking for cv files:
-parser.add_argument('-i','--input', help='Input directory',required=True)
-parser.add_argument('-o','--output',help='Output directory', required=True)
-args = parser.parse_args()
- 
-## show values ##
-print ("Input file: %s" % args.input )
-print ("Output file: %s" % args.output )
-
-
-for dirpath, dirnames, filenames in os.walk(args.input):
-    for filename in [f for f in filenames if f.endswith(".cv")]:
-        measurement  = open(os.path.join(dirpath, filename), "r")
-        
-        new_dir = os.path.join(args.output + dirpath[len(args.input):])
-        
-        if not os.path.exists(os.path.dirname(new_dir)):
-            try:
-                os.makedirs(os.path.dirname(new_dir))
-            except OSError as exc: # Guard against race condition
-                if exc.errno != errno.EEXIST:
-                    raise
-                
-        measurement_corr = open(new_dir + filename[:-3] + "_Series_Corr.cv","w")
-        
-        meas_lines = measurement.readlines()
-        angfreq = float(meas_lines[40].split()[-2])*2*math.pi
-        
-        BeginFlag = False;
-        for line in meas_lines:
-        
-            if line.strip() == "CV Measurement":
-                line_corr = line.strip() + " (Capacitance converted to series model)\n"
-                measurement_corr.write(line_corr)
-                continue           
-                 
-            if line.strip() == "BEGIN":
-                measurement_corr.write(line)
-                BeginFlag = True
-                continue    
-                       
-            if BeginFlag and line.strip() != 'END':
-                Cp = float(line.split()[1])
-                Rp = 1/float(line.split()[2])
-                Cs = str((1 + angfreq**2 * Rp**2 * Cp**2)/(angfreq**2 * Rp**2 * Cp))
-                
-                line_corr = line.split()[0] + '\t' + Cs + '\t' + line.split()[2] + '\t' + line.split()[3] + '\t' + line.split()[4] + '\n'
-                measurement_corr.write(line_corr)
-                continue
-            measurement_corr.write(line)  
-        
-        measurement.close()
-        measurement_corr.close()
-
-
 #------------------------------------------------------------------------------------------------------------------
 
 def get_files(module_path,sensor_number_list):
@@ -240,6 +172,77 @@ def get_data(cvfiles,ivfiles)
     canvas.SaveAs("cluster_calibrated_charge_{0}.root".format(Nrun))
 
  """
+
+"""
+
+#------------------------------------------------------------------------------------------------------------------
+
+# This part of the code corrects the capacitance values for irradiated sensors which present an awkward C vs V curve:
+
+import os
+import os.path
+import argparse
+import math
+import errno
+
+# Definition of the parser for reading the arguments after the name of the code:
+parser = argparse.ArgumentParser()
+# Write -i + Name of the directory whose directories and folders are going to be inspected looking for cv files:
+parser.add_argument('-i','--input', help='Input directory',required=True)
+parser.add_argument('-o','--output',help='Output directory', required=True)
+args = parser.parse_args()
+ 
+## show values ##
+print ("Input file: %s" % args.input )
+print ("Output file: %s" % args.output )
+
+
+for dirpath, dirnames, filenames in os.walk(args.input):
+    for filename in [f for f in filenames if f.endswith(".cv")]:
+        measurement  = open(os.path.join(dirpath, filename), "r")
+        
+        new_dir = os.path.join(args.output + dirpath[len(args.input):])
+        
+        if not os.path.exists(os.path.dirname(new_dir)):
+            try:
+                os.makedirs(os.path.dirname(new_dir))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+                
+        measurement_corr = open(new_dir + filename[:-3] + "_Series_Corr.cv","w")
+        
+        meas_lines = measurement.readlines()
+        angfreq = float(meas_lines[40].split()[-2])*2*math.pi
+        
+        BeginFlag = False;
+        for line in meas_lines:
+        
+            if line.strip() == "CV Measurement":
+                line_corr = line.strip() + " (Capacitance converted to series model)\n"
+                measurement_corr.write(line_corr)
+                continue           
+                 
+            if line.strip() == "BEGIN":
+                measurement_corr.write(line)
+                BeginFlag = True
+                continue    
+                       
+            if BeginFlag and line.strip() != 'END':
+                Cp = float(line.split()[1])
+                Rp = 1/float(line.split()[2])
+                Cs = str((1 + angfreq**2 * Rp**2 * Cp**2)/(angfreq**2 * Rp**2 * Cp))
+                
+                line_corr = line.split()[0] + '\t' + Cs + '\t' + line.split()[2] + '\t' + line.split()[3] + '\t' + line.split()[4] + '\n'
+                measurement_corr.write(line_corr)
+                continue
+            measurement_corr.write(line)  
+        
+        measurement.close()
+        measurement_corr.close()
+
+
+"""
 
 
 if __name__ == '__main__':
