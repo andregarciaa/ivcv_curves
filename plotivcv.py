@@ -1,9 +1,9 @@
 # para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
-#! /usr/bin/python
+#!/usr/bin python
 
 #------------------------------------------------------------------------------------------------------------------
 
-def get_files(module_path,sensor_number_list):
+def get_files( module_path, sensor_number_list ):
     """ WHAT THE FUNCTION DOES
         This function receives the directory containing the module folders with data
         and a list of the sensors which the user wants to plot.
@@ -16,7 +16,7 @@ def get_files(module_path,sensor_number_list):
       Array with the names of the sensors inside the module_path which the user wants to plot
 
     Return
-    Two arrays with the paths and names of the files which contain the data which is goint to be plotted
+    Two arrays with the paths and names of the files which contain the data which is going to be plotted
     ------
     ivfiles,cvfiles   
     """
@@ -250,10 +250,10 @@ if __name__ == '__main__':
 
     parser = ArgumentParser(prog='plotivcv')
     # Argumento posicional:
-    parser.add_argument('module_dir',help="Name of the module's directory"\
+    parser.add_argument('module_path',help="Name of the module's directory"\
                           " which has several subdirectories with the data of each sensor inside the module")
     # Argumento opcional (tipo con la variable nargs, el + significa lista):
-    parser.add_argument('-s', '--sensor-number', nargs="+", dest="sensor_number", help="Sensor subdirectory"\
+    parser.add_argument('-s', '--sensor_number_list', nargs="+", dest="sensor_number", help="Sensor subdirectory"\
                          " names inside the module_dir which are going to actually be plotted."\
                          " All the sensors in the module will be plotted if this argument is not used")
     # ejecucion del parser (lectura de los inputs del user):
@@ -261,7 +261,7 @@ if __name__ == '__main__':
     print args.module_dir
     print args.sensor_number
     # Obtain the list IV,CV files. First output of get_files is the cv data, and second the iv
-    cvfiles,ivfiles = get_files(args.module_dir,args.sensor_number)
+    cvfiles,ivfiles = get_files(args.module_dir, args.sensor_number)
     # Read and parse the files
     # for each ivfile, then parse the file and return the array of measures (I,V)
     ivdata = get_dataiv(ivfiles)
