@@ -1,5 +1,5 @@
 # para ejecutar el script desde el terminal usando ./plotivcv.py (si no hay permiso, se pide con: chmod 777 plotivcv.py)
-#!/usr/bin python
+#!/usr/bin/env python
 
 #------------------------------------------------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ def get_files( module_path, sensor_number_list ):
 # Cada subfichero contiene dos archivos: uno con extension .iv y el otro con extension .cv
 # Encontrar y asociar los ficheros a representar.
 
-def get_data(cvfiles,ivfiles)
+def get_data(cvfiles,ivfiles):
 
     # recorrer el array con los nombres de los ficheros a plotear y para cada uno de ellos, hacer el plot:
     for fileName in ivfiles:
@@ -96,18 +96,17 @@ def get_data(cvfiles,ivfiles)
             ejeY = "v"
             titlePlot = "CV curve"
 
-        # leer el fichero de datos: saltar el cabecero, despues de BEGIN empiezan los datos:
-        while(open('fileName').readLine()!="BEGIN"):
-            open('fileName').NextLine()
+        # open the file, which is only going to be read (r):
+	file = open('fileName','r')
 
-        # saltar la linea con el texto "BEGIN" (la siguiente es la primera con datos):
-        open('fileName').NextLine()  
+        # read data file: skip header lines until line "BEGIN", data starts after it (when the condition is evaluated, the line is read):
+        while(file.readline()!="BEGIN"):
+            print("Looking for the begining of the data...")
 
-        # ir guardando el contenido de todas las lineas no vacias en el array ivdata:
-        while((open('fileName').readLine()!= "")
-            ivdata = open('fileName').readLine()
+	# At the end of WHILE loop, the line with "BEGIN" has been read, so the rest of the file is stored in an array:
+        ivdata = file.readlines()
 
-              """
+        """
         # primeros pasos lectura de los ficheros:
         readfileCV = open(ficherosIVCV[0],'rb') 
         readfileIV = open(ficherosIVCV[1],'rb')
@@ -118,7 +117,7 @@ def get_data(cvfiles,ivfiles)
             cont = cont+1
         # mostrar los valores en el documento (a partir de la linea "BEGIN":
         readfileCV.readLine(cont) 
-             """
+        """
 
 
 
